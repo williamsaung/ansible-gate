@@ -1,0 +1,13 @@
+---
+ - hosts: gate
+   remote_user: williams
+   #become: yes
+   #become_method: sudo
+   connection: ssh
+   tasks:
+     - name: install ruby
+       shell: $SHELL -lc "~/.rbenv/bin/rbenv install 2.3.1"
+     - name: global
+       shell: $SHELL -lc "~/.rbenv/bin/rbenv global 2.3.1"
+     - name: Install Bundler
+       command: $SHELL -lc "~/.rbenv/shims/gem install bundler"

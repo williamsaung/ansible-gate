@@ -1,0 +1,28 @@
+---
+- name: update apt cache
+  apt: update_cache=yes cache_valid_time=86400
+  become: true
+  changed_when: false
+
+- name: install build depends
+  apt: pkg={{ item }} state=present install_recommends=no
+  with_items:
+  - "{{ rbenv_apt_packages }}"
+  become: true
+
+- name: install extra build depends
+  apt: pkg={{ item }} state=present install_recommends=no
+  with_items:
+  - "{{ rbenv_extra_depends }}"
+  become: true
+#- name: add rbenv initialization to profile system-wide
+ # template: src=rbenv_user.sh.j2 dest=/etc/profile.d/rbenv.sh owner=root group=root mode=0755
+  #become: yes
+  #when:
+   # - (ansible_os_family != 'OpenBSD' and ansible_os_family != 'Darwin') and rbenv_user_profile
+
+#- name: add rbenv initialization to profile system-wide
+ # blockinfile: block="{{ lookup('template', 'rbenv_user.sh.j2') }}" dest=/etc/profile
+ # become: yes
+ # when:
+#- ansible_os_family == 'Darwin' and rbenv_user_profile

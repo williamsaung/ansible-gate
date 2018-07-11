@@ -1,0 +1,14 @@
+---
+ - hosts: gate
+   remote_user: williams
+   become: yes
+   become_method: sudo
+   connection: ssh
+   tasks:
+     - mysql_user:
+         name: root
+         password: TDM@Toyota
+         state: present
+         priv: 'gateweb.*:ALL/*.*:USAGE'
+
+

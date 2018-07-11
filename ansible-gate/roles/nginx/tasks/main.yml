@@ -1,0 +1,10 @@
+---
+- name: apt-get-update
+  apt:
+    update_cache: yes
+- name: install nginx
+  apt: pkg=nginx state=installed update_cache=true
+- name: copy the config file
+  copy: src=files/gateweb dest=/etc/nginx/sites-available
+- name: enable site
+  command: sudo ln -s /etc/nginx/sites-available/gateweb /etc/nginx/sites-enabled/  

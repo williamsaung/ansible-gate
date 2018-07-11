@@ -1,0 +1,11 @@
+---
+ - hosts: gate
+   remote_user: williams
+   #become: yes
+   #become_method: sudo
+   connection: ssh
+   tasks:
+     - name: install rails
+       command: $SHELL -lc "~/.rbenv/shims/gem install rails -v 4.2.7"
+     - name: mysql2
+       command: $SHELL -lc "~/.rbenv/shims/gem install mysql2 -v '0.3.20' --source 'http://rubygems.org/'"

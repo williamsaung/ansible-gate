@@ -1,0 +1,55 @@
+server {
+ listen 80;
+ listen [::]:80;
+ server_name _;
+ return 301 https://$host$request_uri;
+}
+
+
+server {
+         server_name _;
+
+        listen 443 ssl default_server;
+        listen [::]:443 ssl default_server;
+        ssl_certificate /etc/ssl/certs/apache-selfsigned.crt;
+        ssl_certificate_key /etc/ssl/private/apache-selfsigned.key;
+        # access_log /var/log/nginx/gate-cable.log coreLog;
+
+        passenger_enabled on;
+        rails_env production;
+        root /home/toyota/GateWeb/current/public;
+
+# location /MainGate_ENT {
+ # root /home/aitvision/GateWeb/images;
+# }
+
+ #       location /MainGate_EXT {
+  #              root /home/aitvision/GateWeb/images;
+  #      }
+
+# location /VISITOR_ENT {
+ #               root /home/aitvision/GateWeb/images;
+  #      }
+
+   #     location /VISITOR_EXT {
+    #            root /home/aitvision/GateWeb/images;
+     #   }
+
+    #    location /VIP_ENT {
+     #           root /home/aitvision/GateWeb/images;
+      #  }
+
+     #   location /VIP_EXT {
+      #          root /home/aitvision/GateWeb/images;
+     #   }
+
+        location /cable {
+                passenger_app_group_name gorails_websocket;
+                passenger_force_max_concurrent_requests_per_process 0;
+        }
+
+        error_page 500 502 503 504 /50x.html;
+        location = /50x.html {
+                root html;
+        }
+}

@@ -1,0 +1,8 @@
+---
+ - hosts: gate
+   remote_user: williams
+   become: yes
+   become_method: sudo
+   connection: ssh
+   roles:
+   - nginx

@@ -1,0 +1,18 @@
+---
+- hosts: gate
+  remote_user: williams
+  #become: yes
+  #become_method: sudo
+  connection: ssh
+  tasks:
+    - name: git clone
+      command: git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+    - name: echo
+      command: echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+    - name: echo2
+      command: echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+    - name: source bashrc
+      sudo: no
+      action: shell . ~/.bashrc
+    - name: git clone 2
+      command: git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build

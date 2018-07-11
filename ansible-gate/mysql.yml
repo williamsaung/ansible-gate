@@ -1,0 +1,10 @@
+---
+ - hosts: gate
+   remote_user: williams
+   become: yes
+   become_method: sudo
+   connection: ssh
+   vars_files:
+     - roles/ansible-role-mysql/vars/main.yml
+   roles:
+     - ansible-role-mysql

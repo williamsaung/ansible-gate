@@ -1,0 +1,49 @@
+---
+- hosts: gate
+  remote_user: williams
+  become: yes
+  become_method: sudo
+  connection: ssh
+  vars:
+    fqdn: admin@myserver.com
+  tasks:
+    - name: install python-dev
+      apt: name=python-dev state=present
+    - name: install
+      apt: name=libffi-dev state=present
+    - name: install again
+      apt: name=libssl-dev state=present
+    - name: download get-pip.py
+      get_url: url=https://bootstrap.pypa.io/get-pip.py  dest=/tmp
+    - name: install pip
+      command: "python /tmp/get-pip.py"
+    - name: install latest pyOpenSSL if needed
+      pip:
+        name: pyOpenSSL
+        state: latest
+    - name: Generate RSA Key
+      command: openssl genrsa \
+        -out "/etc/ssl/private/apache-selfsigned.key" 2048
+      args:
+        creates: "/etc/ssl/private/apache-selfsigned.key"
+    #- openssl_csr:
+     #   path: /etc/ssl/csr/apache-selfsigned.csr
+      #  privatekey_path: /etc/ssl/private
+       # common_name: apache-selfsigned.com
+    - name: Generate CSR
+      command: openssl req \
+        -new \
+        -subj '/C=US/ST=CA/L=Mountain View/O=Jasmeet/CN={{ fqdn }}'
+        -key "/etc/ssl/private/apache-selfsigned.key" \
+        -out "/etc/ssl/csr.pem"
+      args:
+        creates: "/etc/ssl/csr.pem"
+    - name: Generate Self-signed Certificate
+      command: openssl req \
+        -x509 \
+        -days 1825 \
+        -key "/etc/ssl/private/apache-selfsigned.key" \
+        -in "/etc/ssl/csr.pem" \
+        -out "/etc/ssl/certs/apache-selfsigned.crt"
+      args:
+        creates: "/etc/ssl/certs/apache-selfsigned.crt"

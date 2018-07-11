@@ -1,0 +1,17 @@
+---
+ - hosts: gate
+   remote_user: williams
+   become: yes
+   become_method: sudo
+   connection: ssh
+   tasks:
+     - name: uncomment the line
+       replace:
+         path: /etc/nginx/nginx.conf
+         regexp: '# include /etc/nginx/passenger.conf;'
+         replace: 'include /etc/nginx/passenger.conf;'
+     - name: replace config
+       replace:
+         path: /etc/nginx/passenger.conf
+         regexp: 'passenger_ruby /usr/bin/passenger_free_ruby;'
+         replace: 'passenger_ruby /home/sayar/.rbenv/versions/2.3.1/bin/ruby;'
